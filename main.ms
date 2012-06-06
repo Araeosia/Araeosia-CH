@@ -18,7 +18,7 @@ bind(player_chat, NULL, NULL, @chat,
 	assign(@channel, sql_query("SELECT * FROM ChannelsIn WHERE name='@chat[player]'"))
 	assign(@channel, mysql_fetch_array(@channel))
 	#Build the output
-	assign(@output, concat(@chat[player], '§', @channel[channel], '§', @prefix, '§', @chat[message]))
+	assign(@output, concat("CHAT§"@chat[player], '§', @channel[channel], '§', @prefix, '§', @chat[message]))
 	assign(@localout, concat("[", @channel[channel], "] §", @prefix, @chat[player], "§f: ", @chat[message]))
 	#Send the IRC message
 	irc_message("ServerABot", "#servercomm", @output)
@@ -30,9 +30,15 @@ bind(player_chat, NULL, NULL, @chat,
 )
 bind(player_join, NULL, NULL, @join,
 	#Cancel the event
+	modify_event(join_message, null)
 	#Send the IRC message
+	assign(@output, concat("JOIN§", @join[player], "§ServerA"))
+	#irc_message("ServerABot", "#servercomm", @output)
 	#Decide who should recieve the join (both quiet and tutorial)
-	#Echo back to players
+	foreach(all_players, @player,
+		if(array_contains(pgroup(player()),"Tutorial"), die())
+		tmsg(@player, @localout)
+	)
 )
 bind(player_death, NULL, NULL, @death,
 	#Kill the death message
