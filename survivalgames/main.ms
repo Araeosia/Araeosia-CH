@@ -14,19 +14,15 @@ bind(player_death, null, null, @death,
 		assign(@deadplayers, get_value('dead_players'))
 		array_push(@deadplayers, @death[player])
 		assign(@playersleft, array())
-		foreach(all_players, @player,
-			if(array_contains(sk_current_regions(@player)), "SurvivalGamesGame",
-				if(not(array_contains(@deadplayers))
-					array_push(@playersleft, @player)
-				)
-			)
-		)
+		assign(@playersleft, get_value('playersin'))
+		array_remove(@playersleft, player())
 		ifelse(lte(array_size(@playersleft), 3),
 			assign(@left, array_implode(@playersleft, ", ")),
 			assign(@left, concat( array_size(@playersleft), " players"))
 		)
 		broadcast(concat("§4", @death[player], " has died, leaving only ", @left, " are left.))
 		store_value('dead_players', @deadplayers)
+		store_value('playersin', @playersleft)
 	)
 )
 bind(block_break, null, null, @blockbreak,
@@ -34,5 +30,14 @@ bind(block_break, null, null, @blockbreak,
 	if(not(array_contains_ic(@allowedblocks, @blockbreak[type])),
 		cancel()
 		die('§4You are not allowed to break blocks in The Survival Games 2.')
+	)
+)
+bind(player_quit, null, null, @quit,
+	if(not(get_value('games_active')), die())
+	assign(@playersleft, get_value('playersin'))
+	if(in_array(@playersleft, @quit[player]),
+		modify_event(message, concat('§4', @quit[player], ' has left the Hunger Games 2!'))
+		array_remove(@playersleft, @quit[player])
+		store_value('playersin', @playersleft)
 	)
 )

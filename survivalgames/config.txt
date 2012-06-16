@@ -32,6 +32,7 @@
 		set_ploc(@player, @startlocs[@countnum])
 		assign(@countnum, @countnum+1)
 	)
+	store_value('playersin', @playersin)
 	broadcast('The Survival Games 2 is about to begin. Everyone take your places!')
 <<<
 /startgames = >>>
