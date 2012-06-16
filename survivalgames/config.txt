@@ -1,0 +1,13 @@
+/joingames = >>>
+	assign(@playersin, get_value('playersin'))
+	if(not(array_contains(@playersin, player()))
+		msg "§aYou have enlisted in the Survival Games 2."
+		array_push(@playersin, player())
+		store_value('playersin', @playersin)
+		die()
+	)
+	msg "§cYou are already enlisted in the Survival Games 2!"
+
+/startgames = >>>
+	store_value('dead_players', array())
+	
