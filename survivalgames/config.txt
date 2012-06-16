@@ -1,4 +1,5 @@
 /joingames = >>>
+	if(get_value('nomore'), die())
 	assign(@playersin, get_value('playersin'))
 	if(not(array_contains(@playersin, player()))
 		msg "§aYou have enlisted in the Survival Games 2."
@@ -7,7 +8,34 @@
 		die()
 	)
 	msg "§cYou are already enlisted in the Survival Games 2!"
-
+<<<
+/prepgames = >>>
+	if(not(equals(player(), "AgentKid")), die())
+	assign(@startlocs, array(
+		0 => array(
+			"X" => ,
+			"Y" => ,
+			"Z" => ,
+			"world" => 
+		),
+		1 => array(
+			"X" => ,
+			"Y" => ,
+			"Z" => ,
+			"world" => 
+		),
+	))
+	store_value('nomore', true)
+	assign(@playersin, get_value('playersin'))
+	assign(@countnum, 0)
+	foreach(@playersin, @player,
+		set_ploc(@player, @startlocs[@countnum])
+		assign(@countnum, @countnum+1)
+	)
+	broadcast('The Survival Games 2 is about to begin. Everyone take your places!')
+<<<
 /startgames = >>>
+	if(not(equals(player(), "AgentKid")), die())
 	store_value('dead_players', array())
-	
+	store_value('gamesactive', true)
+<<<
